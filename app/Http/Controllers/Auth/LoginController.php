@@ -3,35 +3,68 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
+    private const REDIRECT_TO = '/home';
 
-    use AuthenticatesUsers;
-
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
-    /**
-     * Create a new controller instance.
-     */
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
+    public function login(Request $request): ?Response
+    {
+        $this->validateLogin($request);
+
+        $credentials = [
+            'username' => $request->post('username'),
+            'password' => $request->post('password'),
+        ];
+
+        $user = Sentinel::authenticate($credentials);
+        if ($user) {
+            return redirect()->intended(self::REDIRECT_TO);
+        }
+
+        $this->sendFailedLoginResponse();
+
+        return null;
+    }
+
+    public function logout(Request $request): ?Response
+    {
+        Sentinel::logout();
+
+        $request->session()->invalidate();
+
+        return redirect('/');
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    protected function sendFailedLoginResponse(): void
+    {
+        throw ValidationException::withMessages([
+            'username' => [trans('auth.failed')],
+        ]);
+    }
+
+    protected function validateLogin(Request $request): void
+    {
+        $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
     }
 }

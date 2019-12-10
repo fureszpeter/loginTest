@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'sentinel',
         'passwords' => 'users',
     ],
 
@@ -36,6 +36,10 @@ return [
     */
 
     'guards' => [
+        'sentinel' => [
+            'driver' => 'sentinel'
+        ],
+
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
@@ -68,7 +72,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\User::class,
+            'model' => \App\Domain\EloquentUser::class,
         ],
 
         // 'users' => [
