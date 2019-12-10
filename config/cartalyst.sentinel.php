@@ -123,6 +123,7 @@ return [
     */
 
     'checkpoints' => [
+        'captcha',
         'throttle',
         'activation',
     ],
@@ -223,18 +224,23 @@ return [
                 50 => 16,
                 60 => 32,
             ],
+
+            'captchaThresholds' => 3,
         ],
 
         'ip' => [
             'interval' => 900,
 
-            'thresholds' => 5,
+            'thresholds' => 10,
+            'captchaThresholds' => 3,
         ],
 
         'user' => [
             'interval' => 900,
 
-            'thresholds' => 5,
+            'thresholds' => 10,
+
+            'captchaThresholds' => 3,
         ],
     ],
 ];

@@ -33,6 +33,8 @@ class LoginController extends Controller
 
         $user = Sentinel::authenticate($credentials);
         if ($user) {
+
+            $request->session()->put('captcha', 0);
             return redirect()->intended(self::REDIRECT_TO);
         }
 
@@ -62,9 +64,17 @@ class LoginController extends Controller
 
     protected function validateLogin(Request $request): void
     {
-        $request->validate([
+        $rules = [
             'username' => 'required|string',
             'password' => 'required|string',
-        ]);
+        ];
+
+        if ($request->session()->get('captcha')===1) {
+            $rules = array_merge($rules, [
+                recaptchaFieldName() => recaptchaRuleName(),
+            ]);
+        }
+
+        $request->validate($rules);
     }
 }
