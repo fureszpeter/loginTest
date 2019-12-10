@@ -24,9 +24,10 @@ class SentinelGuard implements Guard
         return Sentinel::getUser();
     }
 
-    public function id(): int
+    public function id(): ?int
     {
-        return $this->user()->getUserId();
+        $user = $this->user();
+        return $user ? $user->getUserId() : null;
     }
 
     public function validate(array $credentials = []): bool
