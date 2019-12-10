@@ -1,17 +1,24 @@
 # Login application
 
-## Requirements
+1. Clone repository
+    `git clone https://github.com/fureszpeter/loginTest.git`
+2. Run composer install
+    `composer install`
+3. Create database (MySQL)
+    - Database name is: `login_test`
+    - You can modify connection parameters in `.env` file
+4. Run database migration and seeder
+    - `php artisan migrate:fresh --seed`
+    
+# Configuration
 
-# Basic development rules during the implementation
+The `.env` file is the main configuration file. You need to fill `RECAPTCHA_SITE_KEY` and `RECAPTCHA_SECRET_KEY` values from Google.
 
-- Use Git for versioning
-    - Use branches and clear commits
-    - Create pull-requests
-    - Use clear commit messages (commits *SHOULD NOT* contains changes what not belongs the description)
-- Use Continuous Integration (CI) (ie: TravisCI)
-- Use some tool for code-formatting, which helps the team co-work. (ie: php-cs-fixer, PSR2) 
-- Use Ubiquity language for better communication between the Product Owner and the developers
-- Separate application and domain code
-- Use some basic tool for code quality improvement (ie: php-md, etc)
-- Program in TDD, cover the code
-- Use ORM (DataMapper instead of ActiveRecord)
+## Captcha
+
+`cartalyst.sentinel.php` contains the configuration and can setup how many attempts are allowed with wrong login.
+You can change values by:
+ - IP based, 
+ - user based or 
+ - global based.
+
