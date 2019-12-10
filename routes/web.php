@@ -11,10 +11,20 @@
 |
 */
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
 Route::get('/', function () {
     return view('welcome');
 });
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+
+Route::group(['as'=>'authenticated.'], function (){
+    Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/admin', 'HomeController@admin')->name('admin');
+    Route::get('/editor', 'HomeController@editor')->name('editor');
+    Route::get('/user', 'HomeController@user')->name('user');
+});
+
